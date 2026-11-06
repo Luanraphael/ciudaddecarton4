@@ -1,0 +1,554 @@
+@import "tailwindcss";
+
+/*
+ * High-Fidelity Claymorphism — "Ciudad de Cartón".
+ * Mesma arquitetura das outras páginas; a cor principal é o marrom-claro do
+ * papelão e as seções coloridas são composições de branco + marrom.
+ */
+:root {
+  --clay-canvas: #fdf9f4;
+  --clay-foreground: #332f3a;
+  --clay-muted: #635f69;
+
+  /* Paleta papelão (marrom-claro) */
+  --sp-white: #ffffff;
+  --sp-cream: #f7eee4;
+  --sp-peach: #e3c6a4;
+  --sp-300: #c08a55;
+  --sp-400: #b07845;
+  --sp-500: #a0693a; /* marrom-claro principal */
+  --sp-600: #875630;
+  --sp-700: #6e4526;
+  --sp-ink: #090d16; /* preto profundo das headlines */
+  --sp-ink-soft: #3b3f4a;
+  --sp-link: #875630;
+  /* Verde dos botões e dos checks (cor do botão de referência). */
+  --sp-go: #0b8601;
+  --sp-go-dark: #097001;
+  --sp-red: #d91c1c;
+
+  --clay-success: #10b981;
+  --clay-success-dark: #059669;
+  --clay-warning: #f59e0b;
+
+  /* 1. Deep Clay (superfícies grandes) */
+  --shadow-clay-deep:
+    0 20px 44px rgba(95, 60, 30, 0.14),
+    inset 0 -6px 14px rgba(95, 60, 30, 0.04);
+
+  /* 2. Clay Card (flutuando) — sem brilho branco externo */
+  --shadow-clay-card:
+    0 12px 28px rgba(95, 60, 30, 0.1),
+    0 2px 6px rgba(95, 60, 30, 0.06),
+    inset 0 -4px 10px rgba(95, 60, 30, 0.04);
+  --shadow-clay-card-hover:
+    0 16px 36px rgba(95, 60, 30, 0.14),
+    0 3px 8px rgba(95, 60, 30, 0.07),
+    inset 0 -4px 10px rgba(95, 60, 30, 0.04);
+
+  /* 4. Clay Pressed (rebaixado) */
+  --shadow-clay-pressed:
+    inset 0 4px 12px rgba(95, 60, 30, 0.1);
+
+  /* Variantes sobre o marrom */
+  --shadow-clay-red-card:
+    0 14px 30px rgba(80, 45, 15, 0.24),
+    inset 0 -6px 14px rgba(80, 45, 15, 0.12);
+  --shadow-clay-red-card-hover:
+    0 18px 38px rgba(80, 45, 15, 0.3),
+    inset 0 -6px 14px rgba(80, 45, 15, 0.12);
+  --shadow-clay-red-pressed:
+    inset 0 4px 12px rgba(80, 45, 15, 0.26);
+  --shadow-clay-orb:
+    0 6px 14px rgba(80, 45, 15, 0.2),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.12);
+}
+
+@theme inline {
+  --color-canvas: var(--clay-canvas);
+  --color-ink: var(--clay-foreground);
+  --color-muted: var(--clay-muted);
+  --color-sp-cream: var(--sp-cream);
+  --color-sp-300: var(--sp-300);
+  --color-sp-400: var(--sp-400);
+  --color-sp-500: var(--sp-500);
+  --color-sp-600: var(--sp-600);
+  --color-sp-700: var(--sp-700);
+  --color-sp-ink: var(--sp-ink);
+  --color-sp-ink-soft: var(--sp-ink-soft);
+  --color-sp-link: var(--sp-link);
+  --color-sp-go: var(--sp-go);
+  --font-display: "Nunito", sans-serif;
+  --font-body: "DM Sans", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--clay-canvas);
+  color: var(--clay-foreground);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ---------- Superfícies ---------- */
+
+.clay-deep {
+  box-shadow: var(--shadow-clay-deep);
+}
+
+.clay-card {
+  background: #ffffff;
+  box-shadow: var(--shadow-clay-card);
+  transition: transform 500ms ease, box-shadow 500ms ease;
+}
+.clay-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-clay-card-hover);
+}
+
+.clay-pressed {
+  background: #f5ebe0;
+  box-shadow: var(--shadow-clay-pressed);
+}
+
+/* ---------- Seções de identidade (branco + marrom, sem degradê) ----------
+ *
+ * Blocos de cor sólida, sem transição.
+ * Branco puro no topo (onde fica a headline) e marrom sólido a partir
+ * de --sp-cut, que passa no meio do mockup/slides. A borda entre as duas cores é
+ * uma onda assimétrica (SVG em public/assets/sp-wave-*.svg, preenchida com o
+ * #a0693a) apoiada logo acima do corte; a variante "b" espelha a onda.
+ * --sp-w (fim da headline) e --sp-o (início do texto branco) são medidos em px no
+ * layout real; o corte fica entre os dois, então a headline está sempre no branco
+ * e o texto branco sempre no marrom, por mais alta que a seção fique no celular.
+ */
+.sp-slab {
+  --sp-w: 200px;
+  --sp-o: 480px;
+  --sp-cut: calc((var(--sp-w) + var(--sp-o)) / 2);
+  --sp-wave: url("/assets/sp-wave-a.svg");
+  --sp-wave-h: 64px;
+
+  background:
+    var(--sp-wave) 0 calc(var(--sp-cut) - var(--sp-wave-h) + 1px) / 100% var(--sp-wave-h) no-repeat,
+    linear-gradient(180deg, var(--sp-white) 0 var(--sp-cut), var(--sp-500) var(--sp-cut) 100%);
+}
+.sp-slab--inside,
+.sp-slab--guarantee {
+  --sp-wave: url("/assets/sp-wave-b.svg");
+}
+@media (min-width: 640px) {
+  .sp-slab { --sp-wave-h: 96px; }
+}
+@media (min-width: 1024px) {
+  .sp-slab { --sp-wave-h: 120px; }
+}
+
+/*
+ * Posições medidas no layout real (360/390/768/1440): --sp-w fica logo abaixo da
+ * headline e --sp-o antes do primeiro texto branco. Onde o corte passa atrás de um
+ * mockup, ele acompanha a altura dele (proporcional à largura da tela).
+ */
+
+/* Hero: corte atrás do mockup. */
+.sp-slab--hero {
+  /* a headline do hero (5 linhas) termina em ~29px + 61.3vw no celular */
+  --sp-w: calc(29px + 61.3vw);
+  --sp-o: calc(43px + 61.3vw + (100vw - 32px) * 0.92);
+}
+/*
+ * Inside: os modelos ficam num bloco branco e a onda fica presa no fim dele,
+ * descendo sozinha conforme o conteúdo cresce.
+ */
+.sp-slab--inside {
+  background: var(--sp-500);
+}
+.sp-inside-top {
+  padding-bottom: calc(var(--sp-wave-h) + 24px);
+  background: var(--sp-wave) 0 calc(100% + 1px) / 100% var(--sp-wave-h) no-repeat, var(--sp-white);
+}
+/* Caixa de descrição: marrom com texto preto e o mesmo carimbo deslocado dos grifos. */
+.sp-note {
+  padding: 1rem 1.25rem;
+  border-radius: 14px;
+  background: var(--sp-500);
+  color: var(--sp-ink);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+  box-shadow: 5px 5px 0 var(--sp-ink);
+}
+/* Garantia: seção curta; o corte passa atrás do selo verde, headline já no marrom. */
+.sp-slab--guarantee {
+  --sp-w: 40px;
+  --sp-o: 232px;
+}
+/* Card da oferta (dentro da seção clara): mesmo sistema, corte atrás do mockup. */
+.sp-slab--offer {
+  --sp-w: 240px;
+  --sp-o: 525px;
+  box-shadow: 0 20px 44px rgba(80, 45, 15, 0.22);
+}
+
+@media (min-width: 640px) {
+  .sp-slab--hero {
+    --sp-w: 473px;
+    --sp-o: calc(487px + (min(100vw, 680px) - 48px) * 0.92);
+  }
+  .sp-slab--offer {
+    --sp-w: 160px;
+    --sp-o: calc(150px + (min(100vw, 680px) - 128px) * 0.92);
+  }
+}
+
+/* Barra fixa do topo: marrom sólido */
+.sp-topbar {
+  background: var(--sp-500);
+}
+
+.clay-red-card {
+  /* Sólido, um tom acima do marrom do fundo */
+  background: color-mix(in srgb, var(--sp-500) 88%, #fff);
+  box-shadow: var(--shadow-clay-red-card);
+  transition: transform 500ms ease, box-shadow 500ms ease;
+}
+.clay-red-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-clay-red-card-hover);
+}
+
+.clay-red-pressed {
+  background: rgba(80, 45, 15, 0.18);
+  box-shadow: var(--shadow-clay-red-pressed);
+}
+
+.clay-orb {
+  box-shadow: var(--shadow-clay-orb);
+}
+
+/* ---------- Botão ---------- */
+
+/* Botão chapado: verde sólido, cantos de 6px, sem sombra (modelo enviado pelo Luan). */
+.clay-button {
+  background: var(--sp-go);
+  color: #fff;
+  transition: background-color 200ms ease, transform 150ms ease;
+}
+.clay-button:hover {
+  background: var(--sp-go-dark);
+}
+.clay-button:active {
+  transform: scale(0.97);
+}
+.clay-button:focus-visible {
+  outline: 3px solid var(--sp-ink);
+  outline-offset: 2px;
+}
+
+/* ---------- Texto ---------- */
+
+/* Headlines: cor decidida pela região real do fundo atrás delas */
+.sp-title--dark { color: var(--sp-ink); }
+.sp-title--light { color: var(--sp-white); }
+
+/*
+ * Grifo: faixa sólida integrada à tipografia, letras pretas, com um
+ * "carimbo" preto deslocado 0.075em para baixo/direita (o recorte gráfico).
+ * A faixa é desenhada por camadas de fundo recortadas na altura da letra
+ * (do topo das maiúsculas até logo abaixo da baseline da Nunito), e não pela
+ * caixa inline inteira, que é mais alta que o entrelinha 1.1 e encostaria nas
+ * linhas vizinhas. box-decoration-break repete tudo em cada linha quebrada.
+ */
+.sp-mark {
+  --mk-bg: var(--sp-500);
+  --mk-ink: var(--sp-ink);
+  --mk-off: 0.075em;
+  --mk-top: 0.22em;
+  --mk-h: 0.94em;
+  color: var(--mk-ink);
+  padding: 0 0.2em;
+  margin: 0 0.03em;
+  background:
+    linear-gradient(var(--mk-bg), var(--mk-bg)) 0 var(--mk-top) / calc(100% - var(--mk-off)) var(--mk-h) no-repeat,
+    linear-gradient(var(--mk-ink), var(--mk-ink)) var(--mk-off) calc(var(--mk-top) + var(--mk-off)) /
+      calc(100% - var(--mk-off)) var(--mk-h) no-repeat;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+/* Sobre o marrom a faixa vira branca, para não sumir no fundo */
+.sp-mark--on-orange {
+  --mk-bg: var(--sp-white);
+}
+
+/* ---------- Headline do hero (mesma headline da capa, em outra linguagem) ----------
+ *
+ * Quatro níveis empilhados:
+ *   1. sobretítulo editorial espaçado, entre filetes marrom;
+ *   2. linha de apoio em preto profundo;
+ *   3. a palavra-herói em marrom, com um contorno preto "fantasma" deslocado
+ *      atrás (deslocamento fino, na mesma direção do carimbo dos grifos);
+ *   4. a promessa num voucher: recortes de cupom nas pontas, picotes
+ *      tracejados e carimbo preto (drop-shadow no wrapper, que segue o recorte).
+ * Os tamanhos usam vw para cada linha caber na largura do celular sem quebrar.
+ */
+.sp-hero-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--sp-ink);
+  line-height: 1;
+}
+.sp-hero-lead {
+  margin-top: 0.42em;
+  font-size: clamp(27px, 8.3vw, 58px);
+  line-height: 1.02;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+.sp-hero-lead--next {
+  margin-top: 0.04em;
+}
+.sp-hero-word {
+  position: relative;
+  isolation: isolate;
+  /* folga para o acento do Ó não encostar na linha de cima */
+  margin-top: 0.12em;
+  color: var(--sp-500);
+  font-size: clamp(56px, 18.5vw, 128px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+  /* espaço para o contorno deslocado não ser cortado */
+  padding: 0 0.08em 0.08em 0;
+}
+.sp-hero-word-ghost {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  color: transparent;
+  -webkit-text-stroke: 0.016em var(--sp-ink);
+  transform: translate(0.06em, 0.06em);
+  pointer-events: none;
+}
+.sp-voucher-wrap {
+  display: inline-block;
+  margin-top: 0.5em;
+  font-size: clamp(15px, 4.6vw, 28px);
+  filter: drop-shadow(0.12em 0.12em 0 var(--sp-ink));
+}
+.sp-voucher {
+  position: relative;
+  display: inline-block;
+  padding: 0.62em 1.35em 0.58em;
+  border-radius: 0.22em;
+  background: var(--sp-500);
+  color: var(--sp-ink);
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  -webkit-mask:
+    radial-gradient(circle 0.42em at 0 50%, transparent 97%, #000 100%) left / 51% 100% no-repeat,
+    radial-gradient(circle 0.42em at 100% 50%, transparent 97%, #000 100%) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle 0.42em at 0 50%, transparent 97%, #000 100%) left / 51% 100% no-repeat,
+    radial-gradient(circle 0.42em at 100% 50%, transparent 97%, #000 100%) right / 51% 100% no-repeat;
+}
+/* picotes do cupom, um em cada ponta */
+.sp-voucher::after {
+  content: "";
+  position: absolute;
+  inset: 0.28em 0.72em;
+  border-inline: 2px dashed rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+}
+
+/* Destaque em parágrafos sobre o marrom: chip branco, sem carimbo */
+.sp-mark-soft {
+  color: var(--sp-ink);
+  background: var(--sp-white);
+  font-weight: 800;
+  padding: 0.04em 0.3em;
+  border-radius: 0.3em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.clay-text-gradient {
+  background: linear-gradient(
+    120deg,
+    var(--sp-ink) 20%,
+    var(--sp-500) 60%,
+    var(--sp-400)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- Animações ---------- */
+
+@keyframes clay-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(2deg); }
+}
+@keyframes clay-float-delayed {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(-2deg); }
+}
+@keyframes clay-float-slow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-30px) rotate(5deg); }
+}
+@keyframes clay-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+@keyframes clay-blink {
+  50% { opacity: 0.5; }
+}
+
+.animate-clay-float { animation: clay-float 8s ease-in-out infinite; }
+.animate-clay-float-delayed { animation: clay-float-delayed 10s ease-in-out infinite; }
+.animate-clay-float-slow { animation: clay-float-slow 12s ease-in-out infinite; }
+.animate-clay-breathe { animation: clay-breathe 6s ease-in-out infinite; }
+.animate-clay-blink { animation: clay-blink 1.5s infinite; }
+.animation-delay-2000 { animation-delay: 2s; }
+.animation-delay-4000 { animation-delay: 4s; }
+
+/* ---------- Slides "Take a look inside" (1 por vez, setas + arrasto) ---------- */
+
+.showcase-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.showcase-track::-webkit-scrollbar {
+  display: none;
+}
+.showcase-slide {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  padding: 4px 10px 30px;
+}
+.showcase-arrow {
+  position: absolute;
+  top: calc(50% - 38px);
+  display: inline-flex;
+  height: 48px;
+  width: 48px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 2px solid var(--sp-white);
+  background: var(--sp-500);
+  color: var(--sp-white);
+  box-shadow: 0.12em 0.12em 0 var(--sp-ink), 0 6px 16px rgba(9, 13, 22, 0.25);
+  cursor: pointer;
+}
+.showcase-arrow:active {
+  transform: scale(0.94);
+}
+
+/* ---------- FAQ (details/summary nativo) ---------- */
+
+.clay-faq summary {
+  list-style: none;
+}
+.clay-faq summary::-webkit-details-marker {
+  display: none;
+}
+.clay-faq .faq-icon-open { display: none; }
+.clay-faq[open] .faq-icon-open { display: inline-flex; }
+.clay-faq[open] .faq-icon-closed { display: none; }
+.clay-faq[open] {
+  box-shadow: var(--shadow-clay-pressed);
+  background: #f5ebe0;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Modelos (todos os setores de uma vez, medidas embaixo de cada card) ---------- */
+
+/* Título do setor: faixa marrom com o mesmo carimbo preto dos grifos. */
+.md-sector {
+  width: fit-content;
+  margin: 0 auto;
+  padding: 0.4em 1.1em;
+  border-radius: 9999px;
+  background: var(--sp-500);
+  color: var(--sp-white);
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 900;
+  box-shadow: 3px 3px 0 var(--sp-ink);
+}
+.md-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  background: var(--sp-white);
+  box-shadow: var(--shadow-clay-card);
+  overflow: hidden;
+}
+.md-card-img {
+  flex: none;
+  aspect-ratio: 1;
+  /* sem isso a arte alta (silo, prédio) estica o quadrado */
+  overflow: hidden;
+  padding: 14px;
+  background: var(--sp-cream);
+}
+.md-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.md-tag {
+  color: var(--sp-600);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+/* ---------- Legenda do molde (linhas de corte, dobra e cola) ---------- */
+
+.lg-line {
+  flex: 0 0 44px;
+  height: 0;
+  border-top: 3px solid var(--sp-ink);
+}
+.lg-line--dash { border-top-style: dashed; }
+.lg-line--dot { border-top-style: dotted; border-top-width: 4px; }
+
