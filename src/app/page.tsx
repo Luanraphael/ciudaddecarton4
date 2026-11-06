@@ -25,7 +25,7 @@ const MAIN_PRODUCT = "Ciudad de Cartón";
 const MAIN_PRODUCT_FULL = "Ciudad de Cartón: 35 moldes para imprimir y armar";
 const MAIN_MOCKUP = { img: "mockup-principal.png", w: 1306, h: 1204 };
 
-const HERO_BULLETS = ["35 moldes en PDF, listos para imprimir en A4", "Acceso inmediato por e-mail", "Garantía de 7 días"];
+const HERO_BULLETS = ["35 moldes en PDF, listos para imprimir en A4", "Acceso inmediato por e-mail y WhatsApp", "Garantía de 7 días"];
 
 const INCLUDES = [
   "35 moldes: 23 de la ciudad y 12 de la zona rural",
@@ -148,7 +148,7 @@ const OFFER_ITEMS = [
   "Guía de 5 tamaños, del 50% al 200%",
   "Impresión ilimitada, para casa o para el aula",
   "PDF en A4, para ver, descargar o imprimir",
-  "Acceso inmediato por e-mail",
+  "Acceso inmediato por e-mail y WhatsApp",
 ];
 
 const FAQ: { q: string; a: ReactNode }[] = [
@@ -156,10 +156,10 @@ const FAQ: { q: string; a: ReactNode }[] = [
     q: "¿Cómo recibo los moldes?",
     a: (
       <>
-        Justo después de confirmar el pago, <strong>te llega al e-mail el enlace del PDF</strong>.
+        Justo después de confirmar el pago, <strong>te llega el enlace del PDF por e-mail y WhatsApp</strong>.
         <br />
-        No necesitas enviar comprobante ni hacer nada más. Solo revisa que escribiste bien tu e-mail en el momento de
-        la compra.
+        No necesitas enviar comprobante ni hacer nada más. Solo revisa que escribiste bien tu e-mail y tu número de
+        WhatsApp en el momento de la compra.
       </>
     ),
   },
@@ -631,7 +631,7 @@ export default function CiudadPage() {
               Términos de Uso
             </a>
           </div>
-          <p className="mt-4 text-muted">Producto digital · PDF A4 · entregado por e-mail</p>
+          <p className="mt-4 text-muted">Producto digital · PDF A4 · entregado por e-mail y WhatsApp</p>
           <p className="mt-2 text-muted">© 2026 Todos los derechos reservados.</p>
         </footer>
       </main>
